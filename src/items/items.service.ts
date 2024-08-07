@@ -1,66 +1,54 @@
-import { Injectable, NotFoundException } from "@nestjs/common";
-import { Item } from "./item.interface";
-import { CreateItemDto } from "./create-item.dto";
-import { UpdateItemDto } from "./update-item.dto";
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { Item } from './item.entity';
+import { CreateItemDto } from './create-item.dto';
+import { UpdateItemDto } from './update-item.dto';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ItemsService {
-    readonly #items: Item[] = [];
+  constructor(
+    @InjectRepository(Item)
+    private itemsRepository: Repository<Item>,
+  ) {}
 
-    create(itemDto: CreateItemDto): Item {
-        const newItem: Item = {
-            id: this.#getNextItemId(),
-            description: itemDto.description,
-            dueDate: itemDto.dueDate,
-            complete: false
-        }
+  create(itemDto: CreateItemDto): Promise<Item> {
+    const newItem: Item = {
+      id: null,
+      description: itemDto.description,
+      dueDate: itemDto.dueDate,
+      complete: false,
+    };
 
-        this.#items.push(newItem);
+    return this.itemsRepository.save(newItem);
+  }
 
-        return newItem;
+  findAll(): Promise<Item[]> {
+    return this.itemsRepository.find();
+  }
+
+  findOne(id: number): Promise<Item | null> {
+    return this.itemsRepository.findOneBy({ id });
+  }
+
+  async deleteItem(id: number): Promise<void> {
+    await this.itemsRepository.delete(id);
+  }
+
+  async updateItem(
+    id: number,
+    updateItemDto: UpdateItemDto,
+  ): Promise<Item | null> {
+    const item = await this.findOne(id);
+    if (item) {
+      item.description = updateItemDto.description;
+      item.dueDate = updateItemDto.dueDate;
+      item.complete = updateItemDto.complete;
+      await this.itemsRepository.save([item]);
+
+      return item;
     }
 
-    findAll(): Item[] {
-        return this.#items;
-    }
-
-    findOne(id: number): Item {
-        const index = this.#findIndexOfItemId(id);
-        return this.#items[index];
-    }
-
-    deleteItem(id: number) {
-        const index = this.#findIndexOfItemId(id);
-        this.#items.splice(index, 1);
-    }
-
-    updateItem(id: number, updateItemDto: UpdateItemDto): Item
-    {
-        const index = this.#findIndexOfItemId(id);
-        this.#items[index].description = updateItemDto.description;
-        this.#items[index].dueDate = updateItemDto.dueDate;
-        this.#items[index].complete = updateItemDto.complete;
-
-        return this.#items[index];
-    }
-
-    #getNextItemId(): number {
-        let maxId = 0;
-        for (var i = 0; i < this.#items.length; i++) {
-            maxId = Math.max(this.#items[i].id, maxId);
-        }
-
-        return maxId + 1;
-    }
-
-    #findIndexOfItemId(id: number): number
-    {
-        for (var i = 0; i < this.#items.length; i++) {
-            if (this.#items[i].id == id) {
-                return i;
-            }
-        }
-
-        throw new NotFoundException('Item ' + id + ' not found');
-    }
+    throw new NotFoundException();
+  }
 }

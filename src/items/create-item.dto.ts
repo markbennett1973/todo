@@ -1,4 +1,4 @@
 export class CreateItemDto {
-    description: string;
-    dueDate: Date;
+  description: string;
+  dueDate: Date;
 }

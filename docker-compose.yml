@@ -1,10 +1,20 @@
-version: '3.8'
 services:
   app:
-    image: node:18-slim
+    image: node:18-alpine
     working_dir: /app
     volumes:
       - .:/app:cached
     ports:
       - '3000:3000'
-    command: yarn run start:dev
+    command: /bin/sh -c "yarn run migration:run && yarn run start:dev"
+
+  postgres:
+    image: postgres:16
+    environment:
+      POSTGRES_DB: 'todo'
+      POSTGRES_USER: 'user'
+      POSTGRES_PASSWORD: 'pass'
+    volumes:
+      - /var/lib/postgresql/data
+    ports:
+      - '5432:5432'

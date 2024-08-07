@@ -1,5 +1,5 @@
 export class UpdateItemDto {
-    description: string;
-    dueDate: Date;
-    complete: boolean;
+  description: string;
+  dueDate: Date;
+  complete: boolean;
 }

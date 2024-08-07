@@ -13,6 +13,10 @@ install:
 	${DOCKER_RUN} app yarn install
 .PHONY: install
 
+update:
+	${DOCKER_RUN} app yarn upgrade
+.PHONY: update
+
 # ------------------------
 # Re-usable Targets
 # ------------------------
@@ -33,3 +37,7 @@ dev: down up-all
 exec:
 	${DOCKER_COMPOSE} exec app /bin/sh
 .PHONY: exec-api
+
+yarn:
+	${DOCKER_RUN} app /bin/sh
+.PHONY: yarn

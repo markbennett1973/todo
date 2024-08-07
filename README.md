@@ -17,3 +17,8 @@ $ make dev
 ```
 
 API is available at http://localhost:3000
+
+## Development
+
+Generate new database migrations: `yarn run migration:generate`
+
