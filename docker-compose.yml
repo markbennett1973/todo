@@ -6,6 +6,12 @@ services:
       - .:/app:cached
     ports:
       - '3000:3000'
+    environment:
+      DB_HOST: 'postgres'
+      DB_PORT: 5432
+      DB_NAME: 'todo'
+      DB_USER: 'user'
+      DB_PASS: 'pass'
     command: /bin/sh -c "yarn run migration:run && yarn run start:dev"
 
   postgres:
