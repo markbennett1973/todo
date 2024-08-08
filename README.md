@@ -5,6 +5,16 @@ Simple To-Do list app to learn modern Javascript
 
 ## Installation
 
+Create a `.env` file in the project root with these settings for development:
+```
+DB_HOST=postgres
+DB_PORT=5432
+DB_NAME=todo
+DB_USER=user
+DB_PASS=pass
+```
+
+Then build and install:
 ```bash
 $ make build
 $ make install
