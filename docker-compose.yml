@@ -1,12 +1,21 @@
 services:
-  app:
+  api:
     image: node:18-alpine
     working_dir: /app
     volumes:
-      - .:/app:cached
+      - ./api:/app:cached
     ports:
       - '3000:3000'
     command: /bin/sh -c "yarn run migration:run && yarn run start:dev"
+
+  ui:
+    image: node:18-alpine
+    working_dir: /app
+    volumes:
+      - ./ui:/app:cached
+    ports:
+      - '80:80'
+    command: yarn dev
 
   postgres:
     image: postgres:16

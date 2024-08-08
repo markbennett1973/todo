@@ -10,11 +10,11 @@ build:
 .PHONY: build
 
 install:
-	${DOCKER_RUN} app yarn install
+	${DOCKER_RUN} api yarn install
 .PHONY: install
 
 update:
-	${DOCKER_RUN} app yarn upgrade
+	${DOCKER_RUN} api yarn upgrade
 .PHONY: update
 
 # ------------------------
@@ -34,10 +34,14 @@ dev: down up-all
 # ------------------------
 # Exec targets
 # ------------------------
-exec:
-	${DOCKER_COMPOSE} exec app /bin/sh
+exec-api:
+	${DOCKER_COMPOSE} exec api /bin/sh
 .PHONY: exec-api
 
+exec-ui:
+	${DOCKER_COMPOSE} exec ui /bin/sh
+.PHONY: exec-ui
+
 yarn:
-	${DOCKER_RUN} app /bin/sh
+	${DOCKER_RUN} api /bin/sh
 .PHONY: yarn
