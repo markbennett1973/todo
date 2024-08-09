@@ -8,7 +8,7 @@ export class Item {
   @Column()
   description: string;
 
-  @Column()
+  @Column({nullable: true})
   dueDate: Date;
 
   @Column({ default: false })

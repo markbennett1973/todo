@@ -1,35 +1,48 @@
 import { defineStore} from 'pinia';
+import axios from 'axios';
 import { ToDoList } from '@/types/ToDoList.js';
-import { ToDoListItem } from '../types/ToDoListItem';
+
+const itemsApi = 'http://localhost:3000/items';
 
 export const useToDoListStore = defineStore('todolist', {
   state: () => ({
-    todoList: [] as ToDoList[]
+    todoList: [] as ToDoList[],
+    completeItems: [] as ToDoList[],
+    incompleteItems: [] as ToDoList[],
   }),
 
   actions: {
     addItem(description: string) {
-      const item = new ToDoListItem()
-      item.description = description
-      const maxId = this.todoList.reduce((prev, current) => (prev.id > current.id) ? prev.id : current.id, 0)
-      item.id = maxId + 1
-      item.complete = false
-      this.todoList.push(item)
+      axios.post(itemsApi, {
+        description: description
+      }).then(response => {
+        // this.todoList.push(response.data)
+        this.refreshItems()
+      })
     },
 
-    completeItem(id: number) {
-      const match = this.todoList.find(item => item.id === id)
-      if (match) {
-        match.complete = true
-      }
+    completeItem(id: number, completed: boolean) {
+      axios.patch(itemsApi + '/' + id, {
+        complete: completed
+      }).then(() => {
+        this.refreshItems()
+      })
     },
 
     deleteItem(id: number) {
-      const index = this.todoList.findIndex(item => item.id === id);
+      axios.delete(itemsApi + '/' + id)
+        .then(() => {
+          this.refreshItems()
+        })
+    },
 
-      if (index !== -1) {
-        this.todoList.splice(index, 1);
-      }
+    refreshItems() {
+      axios.get(itemsApi)
+        .then((response) => {
+          this.todoList = response.data
+          this.completeItems = this.todoList.filter((item) => item.complete)
+          this.incompleteItems = this.todoList.filter((item) => !item.complete)
+      })
     }
   }
 });

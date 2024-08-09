@@ -3,14 +3,21 @@ import ToDoListItem from '@/components/ToDoListItem.vue';
 import AddToDoListItem from '@/components/AddToDoListItem.vue';
 import { useToDoListStore } from '@/stores/ToDoListStore.ts';
 
+defineProps([
+  'showCompleted'
+])
+
 const store = useToDoListStore()
+store.refreshItems()
 
 function addItem(description) {
-  store.addItem(description)
+  if (description) {
+    store.addItem(description)
+  }
 }
 
-function completeItem(id) {
-  store.completeItem(id)
+function completeItem(id, isCompleted) {
+  store.completeItem(id, isCompleted)
 }
 
 function deleteItem(id) {
@@ -20,21 +27,12 @@ function deleteItem(id) {
 
 <template>
   <table class="table">
-    <thead>
-      <tr>
-        <th scope="col">ID</th>
-        <th scope="col">Description</th>
-        <th scope="col">Completed</th>
-        <th scope="col">Actions</th>
-      </tr>
-    </thead>
-
     <tbody>
       <ToDoListItem
-        v-for="item in store.todoList"
+        v-for="item in showCompleted ? store.completeItems : store.incompleteItems"
         :todoId=item.id
         :description="item.description"
-        :complete="item.complete ? 'Y' : 'N'"
+        :render-as-completed="showCompleted"
         @complete-item="completeItem"
         @delete-item="deleteItem"
       />
@@ -42,6 +40,7 @@ function deleteItem(id) {
   </table>
 
   <AddToDoListItem
+    v-if="!showCompleted"
     @add-item="addItem"
   />
 </template>

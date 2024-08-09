@@ -24,7 +24,11 @@ export class ItemsService {
   }
 
   findAll(): Promise<Item[]> {
-    return this.itemsRepository.find();
+    return this.itemsRepository.find({
+      order: {
+        id: 'ASC'
+      }
+    });
   }
 
   findOne(id: number): Promise<Item | null> {

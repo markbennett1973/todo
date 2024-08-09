@@ -1,5 +1,7 @@
 <script setup>
-const description = ""
+import { ref } from 'vue'
+
+const description = ref('')
 defineEmits(['addItem'])
 </script>
 
@@ -11,6 +13,7 @@ defineEmits(['addItem'])
       class="form-control"
       name="description"
       v-model="description"
+      @keyup.enter="$emit('addItem', description)"
       placeholder="Description">
 
     <button
