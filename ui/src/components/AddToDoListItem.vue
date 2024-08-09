@@ -13,13 +13,13 @@ defineEmits(['addItem'])
       class="form-control"
       name="description"
       v-model="description"
-      @keyup.enter="$emit('addItem', description)"
+      @keyup.enter="[$emit('addItem', description), description='']"
       placeholder="Description">
 
     <button
       type="button"
       class="btn btn-secondary"
-      @click="$emit('addItem', description)">
+      @click="[$emit('addItem', description), description='']">
       Add Item
     </button>
   </div>
