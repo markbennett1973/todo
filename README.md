@@ -17,7 +17,6 @@ DB_PASS=pass
 
 Then build and install:
 ```bash
-$ make build
 $ make install
 ```
 
@@ -28,6 +27,8 @@ $ make dev
 ```
 
 API is available at http://localhost:3000
+
+UI is available at http://localhost
 
 ## Development
 
