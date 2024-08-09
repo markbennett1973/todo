@@ -11,10 +11,12 @@ build:
 
 install:
 	${DOCKER_RUN} api yarn install
+	${DOCKER_RUN} ui yarn install
 .PHONY: install
 
 update:
 	${DOCKER_RUN} api yarn upgrade
+	${DOCKER_RUN} ui yarn upgrade
 .PHONY: update
 
 # ------------------------
@@ -41,7 +43,3 @@ exec-api:
 exec-ui:
 	${DOCKER_COMPOSE} exec ui /bin/sh
 .PHONY: exec-ui
-
-yarn:
-	${DOCKER_RUN} api /bin/sh
-.PHONY: yarn
